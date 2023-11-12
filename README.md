@@ -13,4 +13,4 @@ This project has purpose to learn hex architecture adapting basic use-case
 
 
 ## Repository
-- InMemoryRepository based on map data structure
+- InMemoryRepository based on map data structure 
