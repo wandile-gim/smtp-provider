@@ -2,8 +2,8 @@ package repository
 
 import (
 	"github.com/stretchr/testify/assert"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/handler/command"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/repository"
+	"github.com/wandile/smtp-provider/internal/handler/command"
+	"github.com/wandile/smtp-provider/internal/repository"
 	"testing"
 )
 

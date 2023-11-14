@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/domain"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/handler/command"
+	"github.com/wandile/smtp-provider/internal/domain"
+	"github.com/wandile/smtp-provider/internal/handler/command"
 )
 
 type SmtpConfigRepository interface {

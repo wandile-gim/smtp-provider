@@ -2,9 +2,9 @@ package application
 
 import (
 	"errors"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/domain"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/handler/command"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/repository"
+	"github.com/wandile/smtp-provider/internal/domain"
+	"github.com/wandile/smtp-provider/internal/handler/command"
+	"github.com/wandile/smtp-provider/internal/repository"
 )
 
 type ConfigService struct {
