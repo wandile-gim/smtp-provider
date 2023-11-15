@@ -3,6 +3,7 @@ package application
 import (
 	"errors"
 	"github.com/wandile/smtp-provider/internal/domain"
+	"github.com/wandile/smtp-provider/internal/domain/configuration"
 	"github.com/wandile/smtp-provider/internal/handler/command"
 	"github.com/wandile/smtp-provider/internal/repository"
 )
@@ -51,7 +52,7 @@ func (s *ConfigService) CreateSmtpConfiguration(config *command.SMTPConfig) (*do
 		return nil, errors.New("user Already Exist")
 	}
 
-	smtpConfig := domain.NewSmtpConfig(config.Port, config.SSL, config.Host, config.Username, config.Password)
+	smtpConfig := configuration.NewSmtpConfig(config.Port, config.SSL, config.Host, config.Username, config.Password)
 	err := smtpConfig.AuthenticatesAccount(config)
 	if err != nil {
 		return nil, err

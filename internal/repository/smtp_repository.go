@@ -1,14 +1,16 @@
 package repository
 
 import (
-	"github.com/wandile/smtp-provider/internal/domain"
+	"github.com/wandile/smtp-provider/internal/domain/configuration"
 	"github.com/wandile/smtp-provider/internal/handler/command"
+	"github.com/wandile/smtp-provider/internal/repository/exception"
 )
 
 type SmtpConfigRepository interface {
-	FindById(id string) (*domain.SmtpConfig, error)
-	FindByHost(host string) (*domain.SmtpConfig, error)
-	SaveSmtpConfig(config *command.SMTPConfig) (*domain.ConfigId, error)
-	EditSmtpConfig(id domain.ConfigId, config *domain.SmtpConfig) (*domain.ConfigId, error)
-	DeleteSmtpConfig(config *command.DeleteSMTPConfig)
+	FindAll() []*configuration.SmtpConfig
+	FindById(id string) (*configuration.SmtpConfig, *exception.ConfigException)
+	FindByHost(host string) (*configuration.SmtpConfig, *exception.ConfigException)
+	SaveSmtpConfig(config *command.SMTPConfig) (*configuration.ConfigId, error)
+	UpdateSmtpConfig(id configuration.ConfigId, config *command.UpdateSMTPConfig) (*configuration.ConfigId, *exception.ConfigException)
+	DeleteSmtpConfig(config *command.DeleteSMTPConfig) *exception.ConfigException
 }
