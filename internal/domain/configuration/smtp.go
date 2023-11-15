@@ -2,10 +2,10 @@ package configuration
 
 import (
 	"crypto/tls"
+	"github.com/wandile/smtp-provider/internal/handler/command"
 	"gopkg.in/gomail.v2"
 	"log"
 	"net/smtp"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/handler/command"
 )
 
 type Configs struct {
