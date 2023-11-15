@@ -57,10 +57,10 @@ func TestConfigService_CreateSmtpConfiguration(t *testing.T) {
 		log.Println(err)
 	}
 
-	id, err2 := repo.FindById(configuration.Id.Id)
+	id, err := repo.FindById(configuration.Id.Id)
 
 	// then
-	assert.Nil(t, err2)
+	assert.Nil(t, err)
 	assert.Equal(t, id.ConfigId, configuration.Id)
 }
 
