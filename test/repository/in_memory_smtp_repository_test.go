@@ -2,8 +2,9 @@ package repository
 
 import (
 	"github.com/stretchr/testify/assert"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/handler/command"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/repository"
+	"github.com/wandile/smtp-provider/internal/handler/command"
+	"github.com/wandile/smtp-provider/internal/repository"
+	"github.com/wandile/smtp-provider/internal/repository/exception"
 	"testing"
 )
 
@@ -21,14 +22,12 @@ func TestInMemorySmtpRepository_DeleteSmtpConfig(t *testing.T) {
 	}
 
 	id, err := repo.SaveSmtpConfig(config)
-	if err != nil {
-		return
-	}
 
 	repo.DeleteSmtpConfig(&command.DeleteSMTPConfig{Id: id.Id})
-	_, err = repo.FindById(id.Id)
+	_, err2 := repo.FindById(id.Id)
 
-	assert.NotNil(t, err)
+	assert.Nil(t, err)
+	assert.IsType(t, err2, &exception.ConfigException{})
 }
 
 func TestInMemorySmtpRepository_EditSmtpConfig(t *testing.T) {
