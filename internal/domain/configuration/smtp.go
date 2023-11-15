@@ -1,4 +1,4 @@
-package domain
+package configuration
 
 import (
 	"crypto/tls"
@@ -48,6 +48,7 @@ type SmtpConfig struct {
 	// By default, "localhost" is sent.
 	LocalName string
 	Activate  bool
+	Enable    bool
 }
 
 func NewSmtpConfig(port int, ssl bool, host, username, password string) *SmtpConfig {
@@ -57,6 +58,18 @@ func NewSmtpConfig(port int, ssl bool, host, username, password string) *SmtpCon
 		Username: username,
 		Password: password,
 		SSL:      ssl,
+	}
+	return c
+}
+
+func RestoreSmtpConfig(id *ConfigId, port int, enable bool, host, username, password string) *SmtpConfig {
+	c := &SmtpConfig{
+		ConfigId: *id,
+		Host:     host,
+		Port:     port,
+		Username: username,
+		Password: password,
+		Enable:   enable,
 	}
 	return c
 }

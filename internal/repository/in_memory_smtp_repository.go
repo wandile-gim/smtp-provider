@@ -3,25 +3,25 @@ package repository
 import (
 	"errors"
 	"github.com/google/uuid"
+	"github.com/wandile/smtp-provider/internal/domain/configuration"
+	"github.com/wandile/smtp-provider/internal/handler/command"
 	"log"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/domain"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/handler/command"
 )
 
-func NewStore() *map[string]domain.SmtpConfig {
-	d := make(map[string]domain.SmtpConfig, 0)
+func NewStore() *map[string]configuration.SmtpConfig {
+	d := make(map[string]configuration.SmtpConfig, 0)
 	return &d
 }
 
 type InMemorySmtpRepository struct {
-	Store map[string]domain.SmtpConfig
+	Store map[string]configuration.SmtpConfig
 }
 
-func NewInMemorySmtpRepository(data map[string]domain.SmtpConfig) SmtpConfigRepository {
+func NewInMemorySmtpRepository(data map[string]configuration.SmtpConfig) SmtpConfigRepository {
 	return &InMemorySmtpRepository{Store: data}
 }
 
-func (r *InMemorySmtpRepository) FindById(id string) (*domain.SmtpConfig, error) {
+func (r *InMemorySmtpRepository) FindById(id string) (*configuration.SmtpConfig, error) {
 	val, ok := r.Store[id]
 	if !ok {
 		return nil, errors.New("config with ID:" + id + "Does not exist")
@@ -29,7 +29,7 @@ func (r *InMemorySmtpRepository) FindById(id string) (*domain.SmtpConfig, error)
 	return &val, nil
 }
 
-func (r *InMemorySmtpRepository) FindByHost(host string) (*domain.SmtpConfig, error) {
+func (r *InMemorySmtpRepository) FindByHost(host string) (*configuration.SmtpConfig, error) {
 
 	for k, v := range r.Store {
 		log.Println(r.Store[k])
@@ -40,10 +40,10 @@ func (r *InMemorySmtpRepository) FindByHost(host string) (*domain.SmtpConfig, er
 	return nil, errors.New("no such host found: " + host)
 }
 
-func (r *InMemorySmtpRepository) SaveSmtpConfig(config *command.SMTPConfig) (*domain.ConfigId, error) {
+func (r *InMemorySmtpRepository) SaveSmtpConfig(config *command.SMTPConfig) (*configuration.ConfigId, error) {
 	// save to DB
-	d := &domain.SmtpConfig{
-		ConfigId:  domain.ConfigId{Id: uuid.New().String()},
+	d := &configuration.SmtpConfig{
+		ConfigId:  configuration.ConfigId{Id: uuid.New().String()},
 		Host:      config.Host,
 		Port:      config.Port,
 		Username:  config.Username,
@@ -60,7 +60,7 @@ func (r *InMemorySmtpRepository) SaveSmtpConfig(config *command.SMTPConfig) (*do
 }
 
 // EditSmtpConfig Change username and password
-func (r *InMemorySmtpRepository) EditSmtpConfig(id domain.ConfigId, config *domain.SmtpConfig) (*domain.ConfigId, error) {
+func (r *InMemorySmtpRepository) EditSmtpConfig(id configuration.ConfigId, config *configuration.SmtpConfig) (*configuration.ConfigId, error) {
 	confObj, ok := r.Store[id.Id]
 	if !ok {
 		return nil, errors.New("no such host found: " + id.Id)

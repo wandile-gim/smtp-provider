@@ -2,9 +2,10 @@ package application
 
 import (
 	"errors"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/domain"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/handler/command"
-	"source.clobot.co.kr/spot-team/service/smtp-provider/internal/repository"
+	"github.com/wandile/smtp-provider/internal/domain"
+	"github.com/wandile/smtp-provider/internal/domain/configuration"
+	"github.com/wandile/smtp-provider/internal/handler/command"
+	"github.com/wandile/smtp-provider/internal/repository"
 )
 
 type ConfigService struct {
@@ -51,7 +52,7 @@ func (s *ConfigService) CreateSmtpConfiguration(config *command.SMTPConfig) (*do
 		return nil, errors.New("user Already Exist")
 	}
 
-	smtpConfig := domain.NewSmtpConfig(config.Port, config.SSL, config.Host, config.Username, config.Password)
+	smtpConfig := configuration.NewSmtpConfig(config.Port, config.SSL, config.Host, config.Username, config.Password)
 	err := smtpConfig.AuthenticatesAccount(config)
 	if err != nil {
 		return nil, err
