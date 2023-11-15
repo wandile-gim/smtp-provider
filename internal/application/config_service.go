@@ -2,10 +2,10 @@ package application
 
 import (
 	"errors"
-	"github.com/wandile/smtp-provider/internal/domain"
 	"github.com/wandile/smtp-provider/internal/domain/configuration"
 	"github.com/wandile/smtp-provider/internal/handler/command"
 	"github.com/wandile/smtp-provider/internal/repository"
+	"github.com/wandile/smtp-provider/internal/service/smtp"
 )
 
 type ConfigService struct {
@@ -19,33 +19,33 @@ func NewConfigService(repo repository.SmtpConfigRepository) SmtpConfigUseCase {
 }
 
 // ChangeSmtpConfiguration 사용자는 사용할 smtp 설정을 변경할 수 있다.
-func (s *ConfigService) ChangeSmtpConfiguration(config *command.UpdateSMTPConfig) (*domain.ConfigChangeResponse, error) {
+func (s *ConfigService) ChangeSmtpConfiguration(config *command.UpdateSMTPConfig) (*configuration.ConfigChanged, error) {
 	confObj, err := s.repository.FindById(config.Id)
 	if err != nil {
-		return nil, err
+		return nil, err.Error
 	}
 
 	// domain behavior
 	// change user and authenticate
-	err = confObj.ChangeUser(config)
-	if err != nil {
-		return nil, err
+	err2 := confObj.ChangeUser(config)
+	if err2 != nil {
+		return nil, err2
 	}
 
 	// save to DB
-	smtpConfig, err := s.repository.EditSmtpConfig(confObj.ConfigId, confObj)
-	if err != nil {
-		return nil, err
+	smtpConfig, err3 := s.repository.UpdateSmtpConfig(confObj.ConfigId, config)
+	if err3 != nil {
+		return nil, err3.Error
 	}
 
 	// response
-	response := &domain.ConfigChangeResponse{Id: *smtpConfig}
+	response := &configuration.ConfigChanged{Id: *smtpConfig}
 
 	return response, nil
 }
 
 // CreateSmtpConfiguration 사용자는 smtp 설정 생성할 수 있다.
-func (s *ConfigService) CreateSmtpConfiguration(config *command.SMTPConfig) (*domain.ConfigChangeResponse, error) {
+func (s *ConfigService) CreateSmtpConfiguration(config *command.SMTPConfig) (*configuration.ConfigCreated, error) {
 	// find duplicate
 	found, _ := s.repository.FindByHost(config.Host)
 	if found != nil {
@@ -63,15 +63,21 @@ func (s *ConfigService) CreateSmtpConfiguration(config *command.SMTPConfig) (*do
 		return nil, err
 	}
 
-	dto := &domain.ConfigChangeResponse{
-		Id: *id,
+	dto := &configuration.ConfigCreated{
+		Id:   *id,
+		Host: config.Host,
 	}
 
 	return dto, nil
 }
 
 // EnableSmtpConfiguration 사용자는 smtp 설정을 선택하여 활성화 시킬 수 있다.
-func (s *ConfigService) EnableSmtpConfiguration(config *command.EnableSMTPConfig) *domain.ConfigChangeResponse {
+func (s *ConfigService) EnableSmtpConfiguration(config *command.EnableSMTPConfig) (*configuration.ConfigChanged, error) {
+	ds := smtp.NewSmtpService(s.repository)
+	enabled := ds.GetOnlyEnabled(&configuration.ConfigId{Id: config.Id})
+	response := &configuration.ConfigChanged{
+		Id: enabled,
+	}
 
-	return nil
+	return response, nil
 }

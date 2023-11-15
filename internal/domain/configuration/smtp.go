@@ -104,3 +104,7 @@ func (c *SmtpConfig) ChangeUser(config *command.UpdateSMTPConfig) error {
 
 	return nil
 }
+
+func (c *SmtpConfig) EnableConfig(enable bool) {
+	c.Enable = enable
+}
